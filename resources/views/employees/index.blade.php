@@ -19,8 +19,8 @@
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Phone</th>
                             <th>Email</th>
+                            <th>Phone</th>
                             <th>Address</th>
                             <th>Nationality</th>
                             <th>Date Of Birth</th>
@@ -31,33 +31,45 @@
                     </thead>
                     <tbody>
                         @foreach($employees as $employee)
-                            <tr>
-                                <td>{{ $employee['name'] }}</td>
-                                <td>{{ $employee['email'] }}</td>
-                                <td>{{ $employee['phone'] }}</td>
-                                <td>{{ $employee['email'] }}</td>
-                                <td>{{ $employee['address'] }}</td>
-                                <td>{{ $employee['date_of_birth'] }}</td>
-                                <td>{{ $employee['education'] }}</td>
-                                <td>{{ $employee['contact_from'] }}</td>
-                                <td>
+                            @if($employee['name'] == '')
+                                <tr>
+                                    <td  class="text-center" colspan="6">Deleted Value </td>
+                                    <td  class="text-center" colspan="3">
+                                        <a href="{{ route('employees.edit',$i) }}">
+                                            <i class="ion ion-plus-circled"></i> Add Again
+                                        </a>
+                                    </td>
+                                </tr>
+                                @else
+                                <tr>
+                                    <td>{{ $employee['name'] }}</td>
+                                    <td>{{ $employee['email'] }}</td>
+                                    <td>{{ $employee['phone'] }}</td>
+                                    <td>{{ $employee['address'] }}</td>
+                                    <td>{{ $employee['nationality'] }}</td>
+                                    <td>{{ $employee['date_of_birth'] }}</td>
+                                    <td>{{ $employee['education'] }}</td>
+                                    <td>{{ $employee['contact_from'] }}</td>
+                                    <td>
 
-                                    <a href="{{ route('employees.show',$i) }}">
-                                        <i class="ion ion-search"></i>
-                                    </a>
+                                        <a href="{{ route('employees.show',$i) }}">
+                                            <i class="ion ion-search"></i>
+                                        </a>
 
-                                    <a href="{{ route('employees.edit',$i) }}">
-                                        <i class="ion ion-ios-compose-outline"></i>
-                                    </a>
+                                        <a href="{{ route('employees.edit',$i) }}">
+                                            <i class="ion ion-ios-compose-outline"></i>
+                                        </a>
 
-                                    <a href="{{ route('employee.delete.confirm',$i) }}">
-                                        <i class="ion ion-close-circled"></i>
-                                    </a>
+                                        <a href="{{ route('employee.delete.confirm',$i) }}">
+                                            <i class="ion ion-close-circled"></i>
+                                        </a>
 
-                                </td>
+                                    </td>
 
-                                <?php ++$i;  ?>
-                            </tr>
+                                    <?php ++$i;  ?>
+                                </tr>
+                            @endif
+
                         @endforeach
                 </tbody>
                 </table>

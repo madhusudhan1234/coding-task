@@ -70,12 +70,12 @@ class EmployeeRepository
                 if (!$header)
                     $header = $row;
 
-                else
+                else{
                     $data[] = array_combine($header, $row);
+                }
             }
             fclose($handle);
         }
-
         return $data;
     }
 
@@ -148,17 +148,8 @@ class EmployeeRepository
     public function update($request, $id)
     {
         try {
-            $i = 0;
 
-            $tempfile = tempnam(".", "tmp");
-
-            if (!$input = fopen($this->filename, 'r')) {
-                die('could not open existing csv file');
-            }
-
-            if (!$output = fopen($tempfile, 'w')) {
-                die('could not open temporary output file');
-            }
+            list($i, $tempfile, $input, $output) = $this->inputOutputFile();
 
             while (($data = fgetcsv($input)) !== FALSE) {
                 if ($i == $id) {
@@ -167,11 +158,7 @@ class EmployeeRepository
                 fputcsv($output, $data);
                 $i++;
             }
-            fclose($input);
-            fclose($output);
-
-            unlink($this->filename);
-            rename($tempfile, $this->filename);
+            $this->filesClose($input, $output, $tempfile);
 
             return $this->logger->warning("Warning logging", ['Edit' => "Employee Record Edited"]);
 
@@ -190,30 +177,16 @@ class EmployeeRepository
     public function delete($id)
     {
         try {
-            $i = 0;
-
-            $tempfile = tempnam(".", "tmp");
-
-            if (!$input = fopen($this->filename, 'r')) {
-                die('could not open existing csv file');
-            }
-
-            if (!$output = fopen($tempfile, 'w')) {
-                die('could not open temporary output file');
-            }
+            list($i, $tempfile, $input, $output) = $this->inputOutputFile();
 
             while (($data = fgetcsv($input)) !== FALSE) {
                 if ($i == $id) {
-                    $data = [];
+                    $data = ['','','','','','','','',''];
                 }
                 fputcsv($output, $data);
                 $i++;
             }
-            fclose($input);
-            fclose($output);
-
-            unlink($this->filename);
-            rename($tempfile, $this->filename);
+            $this->filesClose($input, $output, $tempfile);
 
             return $this->logger->alert("Alert logging", ['Alert' => "Employee Record Deleted"]);
 
@@ -221,6 +194,39 @@ class EmployeeRepository
             return $this->logger->error("Error logging", ['Error' => "Employee Record Not Deleted"]);
         }
 
+    }
+
+    /**
+     * @return array
+     */
+    public function inputOutputFile()
+    {
+        $i = 0;
+
+        $tempfile = tempnam(".", "tmp");
+
+        if (!$input = fopen($this->filename, 'r')) {
+            die('could not open existing csv file');
+        }
+
+        if (!$output = fopen($tempfile, 'w')) {
+            die('could not open temporary output file');
+        }
+        return array($i, $tempfile, $input, $output);
+    }
+
+    /**
+     * @param $input
+     * @param $output
+     * @param $tempfile
+     */
+    public function filesClose($input, $output, $tempfile)
+    {
+        fclose($input);
+        fclose($output);
+
+        unlink($this->filename);
+        rename($tempfile, $this->filename);
     }
 
 }

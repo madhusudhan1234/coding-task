@@ -11,9 +11,25 @@ scaffold for the views and using the deafult bootstrap and laravel's style as a 
 - For Icons 
    I am using ionic fonts [http://ionicons.com/](http://ionicons.com/)
    
+## How to Run this ?
+ - Clone the project to your computer by running the command "git clone https://github.com/madhusudhan1234/coding-task.git"
+ - Rename .env.example file into .env and add your loggly token
+ - Run commands "npm install" and then "npm install gulp"
+ - Go up to your project directory from command line and run the command "php artisan serve" or "php artisan serve --port your-port"
+ - Go to your browser and type in the URL "localhost:8000" or "localhost:your-port"
+-  Then, hopefully you may be good to go
+
+   
 ## Official Documentation 
 
 Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+
+##Logging Of the Application
+
+For Logging I used the loggly.com for the cloud based logging. And Laravel's LoggerInterface and monolog library 
+i used.
+
+![alt tag](https://madhusudhansubedi.files.wordpress.com/2016/10/logging.png)
 
 ## References
 
