@@ -15,18 +15,17 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <table class="table  table-bordered" id="employeeTable">
+                <table class="table" id="employeeTable">
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Gender</th>
                             <th>Phone</th>
-                            <th>email</th>
-                            <th>address</th>
-                            <th>nationality</th>
+                            <th>Email</th>
+                            <th>Address</th>
+                            <th>Nationality</th>
                             <th>Date Of Birth</th>
                             <th>Education</th>
-                            <th>Mode of Contact</th>
+                            <th>Preferred Contact</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -34,7 +33,6 @@
                         @foreach($employees as $employee)
                             <tr>
                                 <td>{{ $employee['name'] }}</td>
-                                <td>{{ $employee['gender'] }}</td>
                                 <td>{{ $employee['email'] }}</td>
                                 <td>{{ $employee['phone'] }}</td>
                                 <td>{{ $employee['email'] }}</td>
@@ -43,8 +41,22 @@
                                 <td>{{ $employee['education'] }}</td>
                                 <td>{{ $employee['contact_from'] }}</td>
                                 <td>
-                                    <i class="ion ion-search"></i>  <i class="ion ion-ios-compose-outline"></i>  <i class="ion ion-close-circled"></i>
+
+                                    <a href="{{ route('employees.show',$i) }}">
+                                        <i class="ion ion-search"></i>
+                                    </a>
+
+                                    <a href="{{ route('employees.edit',$i) }}">
+                                        <i class="ion ion-ios-compose-outline"></i>
+                                    </a>
+
+                                    <a href="{{ route('employee.delete.confirm',$i) }}">
+                                        <i class="ion ion-close-circled"></i>
+                                    </a>
+
                                 </td>
+
+                                <?php ++$i;  ?>
                             </tr>
                         @endforeach
                 </tbody>

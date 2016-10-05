@@ -15,6 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('employees/{employee}/confirm',['as'=> 'employee.delete.confirm','uses' => 'EmployeeController@confirm']);
 Route::resource('employees', 'EmployeeController');
 
 Auth::routes();

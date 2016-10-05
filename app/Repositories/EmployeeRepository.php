@@ -22,7 +22,10 @@ class EmployeeRepository
     public function __construct(Employee $employees)
     {
         $this->employees = $employees;
+
+        $this->filename = storage_path('app/employees/file.csv');
     }
+
     /**
      * return all the values of file.csv file
      * into the controller, that is useful to show in the index page
@@ -32,9 +35,7 @@ class EmployeeRepository
      */
     public function all()
     {
-        $file = storage_path('/app/employees/file.csv');
-
-        $employee_array = $this->csvToArray($file);
+        $employee_array = $this->csvToArray($this->filename);
 
         return $employee_array;
     }
@@ -53,10 +54,10 @@ class EmployeeRepository
 
         $data = array();
 
-        if (($handle = fopen($filename, 'r')) !== false)
-        {
-            while (($row = fgetcsv($handle, 1000, $delimiter)) !== false)
-            {
+        if (($handle = fopen($filename, 'r')) !== false) {
+
+            while (($row = fgetcsv($handle, 1000, $delimiter)) !== false) {
+
                 if (!$header)
                     $header = $row;
 
@@ -78,13 +79,112 @@ class EmployeeRepository
     {
         $input = $request->except('_token');
 
-        $fp = fopen(storage_path().'/app/employees/file.csv', 'a');
+        $fp = fopen($this->filename, 'a');
 
         fputcsv($fp, $input);
 
         fclose($fp);
 
         return;
+    }
+
+    /**
+     * @param $id
+     * @param string $delimiter
+     * @return array
+     */
+    public function find($id, $delimiter = ',')
+    {
+        $header = null;
+
+        $i = 0;
+
+        if (($handle = fopen($this->filename, 'r')) !== false) {
+
+            while ($row = fgetcsv($handle, 1000, $delimiter)) {
+
+                if (!$header)
+                    $header = $row;
+
+                else {
+                    $data = array_combine($header, $row);
+
+                    if ($i == $id) {
+                        return $data;
+                        break;
+                    };
+                }
+                ++$i;
+            }
+            fclose($handle);
+        }
+    }
+
+    /**
+     * @param $request
+     * @param $id
+     */
+    public function update($request, $id)
+    {
+        $i = 0;
+
+        $tempfile = tempnam(".", "tmp");
+
+        if(!$input = fopen($this->filename,'r')){
+            die('could not open existing csv file');
+        }
+
+        if(!$output = fopen($tempfile,'w')){
+            die('could not open temporary output file');
+        }
+
+        while(($data = fgetcsv($input)) !== FALSE){
+            if ($i == $id) {
+                $data = $request->except('_token', '_method');
+            }
+            fputcsv($output,$data);
+            $i++;
+        }
+        fclose($input);
+        fclose($output);
+
+        unlink($this->filename);
+        rename($tempfile,$this->filename);
+        return ;
+    }
+
+    /**
+     * Delete the specific line from the csv file
+     *
+     * @param $id
+     */
+    public function delete($id)
+    {
+        $i = 0;
+
+        $tempfile = tempnam(".", "tmp");
+
+        if(!$input = fopen($this->filename,'r')){
+            die('could not open existing csv file');
+        }
+
+        if(!$output = fopen($tempfile,'w')){
+            die('could not open temporary output file');
+        }
+
+        while(($data = fgetcsv($input)) !== FALSE){
+            if ($i == $id) {
+                $data = [];
+            }
+            fputcsv($output,$data);
+            $i++;
+        }
+        fclose($input);
+        fclose($output);
+
+        unlink($this->filename);
+        rename($tempfile,$this->filename);
+        return ;
     }
 
 }

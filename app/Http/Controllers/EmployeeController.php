@@ -35,7 +35,7 @@ class EmployeeController extends Controller
     {
         $employees = $this->employees->all();
 
-        return view('employees.index',compact('employees'));
+        return view('employees.index',compact('employees'))->with('i',1);
     }
 
     /**
@@ -45,7 +45,7 @@ class EmployeeController extends Controller
      */
     public function create()
     {
-        return view('employees.form');
+        return view('employees.create');
     }
 
     /**
@@ -69,7 +69,9 @@ class EmployeeController extends Controller
      */
     public function show($id)
     {
-        //
+        $employee = $this->employees->find($id);
+
+        return view('employees.show',compact('employee'));
     }
 
     /**
@@ -80,21 +82,31 @@ class EmployeeController extends Controller
      */
     public function edit($id)
     {
-        //
+        $employee = $this->employees->find($id);
+
+        return view('employees.edit', compact('employee','id'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param EmployeeStoreRequest|Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EmployeeStoreRequest  $request, $id)
     {
-        //
+        $this->employees->update($request,$id);
+
+        return redirect(route('employees.index'))->with('status','Employee Record Updated Successfully');
     }
 
+    public function confirm($id)
+    {
+        $employee = $this->employees->find($id);
+
+        return view('employees.confirm',compact('employee','id'));
+    }
     /**
      * Remove the specified resource from storage.
      *
@@ -103,6 +115,8 @@ class EmployeeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->employees->delete($id);
+
+        return redirect(route('employees.index'))->with('status','Employee Deleted Successfully');
     }
 }

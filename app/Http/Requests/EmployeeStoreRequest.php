@@ -24,7 +24,7 @@ class EmployeeStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
+            'name' => 'required|min:2',
             'gender' => 'required',
             'phone' => 'required|numeric',
             'email' => 'required|email',
