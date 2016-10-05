@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Employee;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class EmployeeRepository
@@ -10,6 +11,7 @@ use App\Employee;
  */
 class EmployeeRepository
 {
+    protected $logger;
     /**
      * @var Employee
      */
@@ -18,10 +20,13 @@ class EmployeeRepository
     /**
      * EmployeeRepository constructor.
      * @param Employee $employees
+     * @param LoggerInterface $logger
      */
-    public function __construct(Employee $employees)
+    public function __construct(Employee $employees, LoggerInterface $logger)
     {
         $this->employees = $employees;
+
+        $this->logger = $logger;
 
         $this->filename = storage_path('app/employees/file.csv');
     }
@@ -37,10 +42,14 @@ class EmployeeRepository
     {
         $employee_array = $this->csvToArray($this->filename);
 
+        $this->logger->info("Info logging", ['Visit' => "User Visited the employees index page"]);
+
         return $employee_array;
     }
 
     /**
+     * return the array value from the csv file
+     *
      * @param string $filename
      * @param string $delimiter
      * @return array|bool
@@ -74,21 +83,30 @@ class EmployeeRepository
      * Store the Form Values to the csv File
      *
      * @param $request
+     * @return string
      */
     public function create($request)
     {
-        $input = $request->except('_token');
+        try {
+            $input = $request->except('_token');
 
-        $fp = fopen($this->filename, 'a');
+            $fp = fopen($this->filename, 'a');
 
-        fputcsv($fp, $input);
+            fputcsv($fp, $input);
 
-        fclose($fp);
+            fclose($fp);
 
-        return;
+            return $this->logger->info("Info logging", ['Insert' => "Employee Record Inserted"]);
+
+        } catch (\Throwable $t) {
+            return $this->logger->error("Error Logging", ['Insert' => "Employee Record is not Inserted" . $t]);
+        }
+
     }
 
     /**
+     * find the particular row of values by getting row number
+     *
      * @param $id
      * @param string $delimiter
      * @return array
@@ -112,7 +130,7 @@ class EmployeeRepository
                     if ($i == $id) {
                         return $data;
                         break;
-                    };
+                    }
                 }
                 ++$i;
             }
@@ -121,70 +139,88 @@ class EmployeeRepository
     }
 
     /**
+     * Update the particular line of row using the row number
+     *
      * @param $request
      * @param $id
+     * @return null
      */
     public function update($request, $id)
     {
-        $i = 0;
+        try {
+            $i = 0;
 
-        $tempfile = tempnam(".", "tmp");
+            $tempfile = tempnam(".", "tmp");
 
-        if(!$input = fopen($this->filename,'r')){
-            die('could not open existing csv file');
-        }
-
-        if(!$output = fopen($tempfile,'w')){
-            die('could not open temporary output file');
-        }
-
-        while(($data = fgetcsv($input)) !== FALSE){
-            if ($i == $id) {
-                $data = $request->except('_token', '_method');
+            if (!$input = fopen($this->filename, 'r')) {
+                die('could not open existing csv file');
             }
-            fputcsv($output,$data);
-            $i++;
-        }
-        fclose($input);
-        fclose($output);
 
-        unlink($this->filename);
-        rename($tempfile,$this->filename);
-        return ;
+            if (!$output = fopen($tempfile, 'w')) {
+                die('could not open temporary output file');
+            }
+
+            while (($data = fgetcsv($input)) !== FALSE) {
+                if ($i == $id) {
+                    $data = $request->except('_token', '_method');
+                }
+                fputcsv($output, $data);
+                $i++;
+            }
+            fclose($input);
+            fclose($output);
+
+            unlink($this->filename);
+            rename($tempfile, $this->filename);
+
+            return $this->logger->warning("Warning logging", ['Edit' => "Employee Record Edited"]);
+
+        } catch (\Throwable $t) {
+            return $this->logger->error("Error Logging", ['Edit' => "Employee Record is not Edited" . $t]);
+        }
+
     }
 
     /**
      * Delete the specific line from the csv file
      *
      * @param $id
+     * @return null
      */
     public function delete($id)
     {
-        $i = 0;
+        try {
+            $i = 0;
 
-        $tempfile = tempnam(".", "tmp");
+            $tempfile = tempnam(".", "tmp");
 
-        if(!$input = fopen($this->filename,'r')){
-            die('could not open existing csv file');
-        }
-
-        if(!$output = fopen($tempfile,'w')){
-            die('could not open temporary output file');
-        }
-
-        while(($data = fgetcsv($input)) !== FALSE){
-            if ($i == $id) {
-                $data = [];
+            if (!$input = fopen($this->filename, 'r')) {
+                die('could not open existing csv file');
             }
-            fputcsv($output,$data);
-            $i++;
-        }
-        fclose($input);
-        fclose($output);
 
-        unlink($this->filename);
-        rename($tempfile,$this->filename);
-        return ;
+            if (!$output = fopen($tempfile, 'w')) {
+                die('could not open temporary output file');
+            }
+
+            while (($data = fgetcsv($input)) !== FALSE) {
+                if ($i == $id) {
+                    $data = [];
+                }
+                fputcsv($output, $data);
+                $i++;
+            }
+            fclose($input);
+            fclose($output);
+
+            unlink($this->filename);
+            rename($tempfile, $this->filename);
+
+            return $this->logger->alert("Alert logging", ['Alert' => "Employee Record Deleted"]);
+
+        } catch (\Throwable $t) {
+            return $this->logger->error("Error logging", ['Error' => "Employee Record Not Deleted"]);
+        }
+
     }
 
 }
