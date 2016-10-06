@@ -33,12 +33,19 @@
                         @foreach($employees as $employee)
                             @if($employee['name'] == '')
                                 <tr>
-                                    <td  class="text-center" colspan="6">Deleted Value </td>
-                                    <td  class="text-center" colspan="3">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td  class="text-center" >Deleted Value </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td  class="text-center" >
                                         <a href="{{ route('employees.edit',$i) }}">
                                             <i class="ion ion-plus-circled"></i> Add Again
                                         </a>
                                     </td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                                 @else
                                 <tr>

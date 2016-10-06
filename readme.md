@@ -1,7 +1,11 @@
 # Coding Task
 
 I am doing this task  using Laravel5.3. I named the clients as employees here. I generate the Laravel's auth 
-scaffold for the views and using the deafult bootstrap and laravel's style as a stylesheet. 
+scaffold for the views and using the deafult bootstrap and laravel's style as a stylesheet. At First i analyse and divide
+smaller tasks and I started to do the task.
+
+##Quick Demo
+ - [Screencast on Youtube](https://www.youtube.com/watch?v=zpEFaA-yubg)
 
 ## Some Extra Packages Used
 - For the Client Side Validation
@@ -17,7 +21,7 @@ scaffold for the views and using the deafult bootstrap and laravel's style as a 
  - Run commands "npm install" and then "npm install gulp"
  - Go up to your project directory from command line and run the command "php artisan serve" or "php artisan serve --port your-port"
  - Go to your browser and type in the URL "localhost:8000" or "localhost:your-port"
--  Then, hopefully you may be good to go
+ -  Then, hopefully you may be good to go
 
    
 ## Official Documentation 
@@ -36,3 +40,5 @@ i used.
  -  [https://jqueryvalidation.org/](https://jqueryvalidation.org/)
  -  [http://php.net/manual/en/function.fputcsv.php](http://php.net/manual/en/function.fputcsv.php)
  -  [http://php.net/manual/en/function.fgetcsv.php](http://php.net/manual/en/function.fgetcsv.php)
+ - [https://blog.yipl.com.np/logging-with-loggly-in-laravel-9479516b5c82#.nhjcnfphv](https://blog.yipl.com.np/logging-with-loggly-in-laravel-9479516b5c82#.nhjcnfphv)
+ - [https://mattstauffer.co/blog/installing-a-laravel-app-on-heroku](https://mattstauffer.co/blog/installing-a-laravel-app-on-heroku)
