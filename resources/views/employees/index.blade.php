@@ -47,6 +47,7 @@
                                     <td></td>
                                     <td></td>
                                 </tr>
+                                <?php ++$i;  ?>
                                 @else
                                 <tr>
                                     <td>{{ $employee['name'] }}</td>

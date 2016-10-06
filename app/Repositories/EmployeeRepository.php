@@ -40,11 +40,11 @@ class EmployeeRepository
      */
     public function all()
     {
-        $employee_array = $this->csvToArray($this->filename);
+        $employeeArray = $this->csvToArray($this->filename);
 
         $this->logger->info("Info logging", ['Visit' => "User Visited the employees index page"]);
 
-        return $employee_array;
+        return $employeeArray;
     }
 
     /**
@@ -70,7 +70,7 @@ class EmployeeRepository
                 if (!$header)
                     $header = $row;
 
-                else{
+                else {
                     $data[] = array_combine($header, $row);
                 }
             }
@@ -90,11 +90,11 @@ class EmployeeRepository
         try {
             $input = $request->except('_token');
 
-            $fp = fopen($this->filename, 'a');
+            $filePointer = fopen($this->filename, 'a');
 
-            fputcsv($fp, $input);
+            fputcsv($filePointer, $input);
 
-            fclose($fp);
+            fclose($filePointer);
 
             return $this->logger->info("Info logging", ['Insert' => "Employee Record Inserted"]);
 
@@ -124,14 +124,13 @@ class EmployeeRepository
                 if (!$header)
                     $header = $row;
 
-                else {
-                    $data = array_combine($header, $row);
+                $data = array_combine($header, $row);
 
-                    if ($i == $id) {
-                        return $data;
-                        break;
-                    }
+                if ($i == $id) {
+                    return $data;
+                    break;
                 }
+
                 ++$i;
             }
             fclose($handle);
@@ -181,7 +180,7 @@ class EmployeeRepository
 
             while (($data = fgetcsv($input)) !== FALSE) {
                 if ($i == $id) {
-                    $data = ['','','','','','','','',''];
+                    $data = ['', '', '', '', '', '', '', '', ''];
                 }
                 fputcsv($output, $data);
                 $i++;
@@ -206,11 +205,11 @@ class EmployeeRepository
         $tempfile = tempnam(".", "tmp");
 
         if (!$input = fopen($this->filename, 'r')) {
-            die('could not open existing csv file');
+            return 'could not open existing csv file';
         }
 
         if (!$output = fopen($tempfile, 'w')) {
-            die('could not open temporary output file');
+            return 'could not open temporary output file';
         }
         return array($i, $tempfile, $input, $output);
     }
