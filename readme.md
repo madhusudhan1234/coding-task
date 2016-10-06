@@ -17,6 +17,7 @@ smaller tasks and then i did  the task.
 
  ## Code Climate Link
   - [https://codeclimate.com/github/madhusudhan1234/coding-task](https://codeclimate.com/github/madhusudhan1234/coding-task)
+  - After getting some issues in codeclimate i make some changes on issues
    
 ## Some Extra Packages Used
 - For the Client Side Validation
@@ -29,7 +30,7 @@ smaller tasks and then i did  the task.
 ## How to Run this ?
  - Clone the project to your computer by running the command "git clone https://github.com/madhusudhan1234/coding-task.git"
  - Rename .env.example file into .env and add your loggly token
- - Run commands "npm install" and then "npm install gulp"
+ - Run commands "npm install" and then "gulp" 
  - Go up to your project directory from command line and run the command "php artisan serve" or "php artisan serve --port your-port"
  - Go to your browser and type in the URL "localhost:8000" or "localhost:your-port"
  -  Then, hopefully you may be good to go
